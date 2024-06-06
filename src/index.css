@@ -11,3 +11,53 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.shadow-bottom {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adjust shadow properties as needed */
+}
+.slick-prev, .slick-next {
+  font-size: 15px !important;
+}
+
+ .slick-prev:before, .slick-next:before  {
+  content: '' !important;
+}
+
+.btn-right{
+  border: none;
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  outline: 0;
+  position: absolute;
+  top: 44%;
+  right: -40px;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+.btn-left{
+  border: none;
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  outline: 0;
+  position: absolute;
+  top: 44%;
+  left: -70px;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+.bg-default {
+  background-color: #f6f7fb;
+}
+.comment-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+.comment-list {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

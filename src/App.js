@@ -1,25 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { publicRoutes } from './routes'
+import { Fragment } from 'react';
+import { Router } from 'react-router-dom';
+import {AuthContextProvider} from './context/AuthContext';
+import { PrimeReactProvider } from 'primereact/api';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <BrowserRouter>
 
-export default App;
+    <AuthContextProvider>
+      <PrimeReactProvider>
+          <Routes>
+            {publicRoutes.map((route, index) => {
+              const Page = route.element;
+              let Layout = Fragment;
+              let ProtectedRoute = Fragment
+              if (route.layout) {
+                Layout = route.layout;
+              }
+              if (route.auth) {
+                ProtectedRoute = route.auth;
+              }
+
+
+              return (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={
+                   <Layout>
+                    <ProtectedRoute/>
+                    <Page />
+                  </Layout>
+                  
+                  }
+                />
+              );
+
+            })}
+          </Routes>
+      </PrimeReactProvider>
+    </AuthContextProvider>
+            </BrowserRouter>
+
+  )
+}
