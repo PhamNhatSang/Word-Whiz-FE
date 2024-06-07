@@ -39,7 +39,7 @@ export default function CourseAddPostItem({
   };
 
   return (
-    <div>
+    <div className="w-full">
       <ReviewItem
         visible={visible}
         setVisible={setVisible}
