@@ -145,8 +145,9 @@ if(!openComment){
                 component="label"
                 variant="contained"
                 onClick={ async () => (await handleAddComment())}
+                disabled={content === ""}
               >
-                <SendIcon color="primary"></SendIcon>
+                <SendIcon color="primary" ></SendIcon>
               </IconButton>
             </div>
           </div>

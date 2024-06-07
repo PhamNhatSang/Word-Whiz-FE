@@ -251,7 +251,7 @@ export default function CommunityPage() {
             await handleUploadPost();
           }}
         >
-          <Button className="w-full" variant="contained">
+          <Button className="w-full" variant="contained" disabled={content===''}>
             Post
           </Button>
         </div>

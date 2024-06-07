@@ -40,12 +40,12 @@ export default function CourseAddPostItem({
 
   return (
     <div className="w-full">
-      <ReviewItem
+      {!isSwitched&& <ReviewItem
         visible={visible}
         setVisible={setVisible}
         words={words}
         courseId={course?.courseId}
-      ></ReviewItem>
+      ></ReviewItem>}
 
       <div
         className="border-gray-300 w-full border rounded-lg mt-2  flex justify-between items-center cursor-pointer hover:border-gray-800"
