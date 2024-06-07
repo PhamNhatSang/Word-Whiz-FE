@@ -36,7 +36,7 @@ export default function CommunityPage() {
   const [content, setContent] = useState("");
   const toast = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-  const user = useAuth();
+  const {user} = useAuth();
   const [listCourseToAdd, setListCourseToAdd] = useState([
     { courseId: 0, courseName: "Course 1", isInPost: false },
   ]);
@@ -169,7 +169,7 @@ export default function CommunityPage() {
             <Avatar
               alt="dsad"
               sx={{ width: 45, height: 45 }}
-              src={image}
+              src={user.avatar}
             ></Avatar>
           </div>
           <div
