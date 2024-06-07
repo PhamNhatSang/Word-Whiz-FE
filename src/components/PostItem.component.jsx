@@ -136,7 +136,7 @@ if(!openComment){
               className={`comment flex flex-row items-center  justify-between mt-1  ${openComment ? "border-t-2" : ""}`}
             >
               <div className="">
-                <Avatar alt="abc" src={user.avatar}></Avatar>
+                <Avatar alt="abc" src={user?.avatar}></Avatar>
               </div>
               <div className="w-10/12">
                 <TextArea className="" placeholder="Comment" autoSize onChange={(e)=>setContent(e.target.value)} value={content}/>

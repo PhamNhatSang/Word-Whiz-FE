@@ -169,7 +169,7 @@ export default function CommunityPage() {
             <Avatar
               alt="dsad"
               sx={{ width: 45, height: 45 }}
-              src={user.avatar}
+              src={user?.avatar}
             ></Avatar>
           </div>
           <div
