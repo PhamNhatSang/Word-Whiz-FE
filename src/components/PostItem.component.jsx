@@ -34,11 +34,7 @@ export default function PostItemComponent({ post,user }){
   const [visibleDialog, setVisibleDialog] = useState(false);
   const [content, setContent] = useState("");
   const [isLiked, setIsLiked] = useState(post.isLiked);
-  const [listComment, setListComment] = useState([{content:'',
-    commentId:0,
-    userId: 0,
-    userAvatar:'',
-    userName:'',}])
+  const [listComment, setListComment] = useState([])
   const handleOpenComment = async () => {  
 
 if(!openComment){
@@ -126,7 +122,7 @@ if(!openComment){
                 className="comment list overflow-y-scroll scrollbar-hide"
                 style={{ maxHeight: "35rem" }}
               >
-                {listComment&&listComment.map((comment) => (
+                {listComment.length>0&&listComment.map((comment) => (
                   <CommentItem comment={comment}></CommentItem>
                 ))}
               </div>
