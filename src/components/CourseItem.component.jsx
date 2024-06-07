@@ -12,7 +12,7 @@ export default function CourseItem({course}) {
       <div class="flex flex-row items-center">
         <ItemText class="bg-white" text={course.terms +" terms"} />
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-        <div class="px-2 flex flex-row items-center"><Avatar   sx={{ width: 24, height: 24 }}  alt="Remy Sharp" src={course.owner_avatar} />
+        <div class="px-2 flex flex-row items-center"><Avatar   sx={{ width: 30, height: 30 }}  alt="Remy Sharp" src={course.owner_avatar} />
         <div class="px-2 text-xl" >{course.owner_name}</div>
         </div>     
       </div>

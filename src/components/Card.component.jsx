@@ -6,7 +6,22 @@ import { CardActionArea, CardHeader } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import ItemText from "./ItemText.component";
 import { Link } from "react-router-dom";
+import { Star } from "@mui/icons-material";
 export default function CardItem({ course }) {
+  const Header = () => {
+    return (
+      <div className="flex flex-row items-center justify-between">
+        <div style={{maxWidth:"90%"}} className=" break-all">{course.title}</div>
+        {course?.avg_rate>0 && (
+          <div className="flex flex-row items-center">
+            <div className=" text-lg text-gray-500 mr-1">{course.avg_rate}</div>
+           
+              <Star style={{ color: "yellow" }}></Star>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -17,8 +32,9 @@ export default function CardItem({ course }) {
         >
           <CardActionArea>
             <div>
-              <CardHeader title={course.title}></CardHeader>
+              <CardHeader title={<Header></Header>}></CardHeader>
             </div>
+
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
                 <ItemText text={course.terms + " terms"} />
@@ -28,7 +44,7 @@ export default function CardItem({ course }) {
                 variant="body2"
                 color="text.secondary"
               >
-                <Avatar alt="Remy Sharp" src={course.onwer_avatar} />
+                <Avatar alt="Remy Sharp" src={course.owner_avatar} />
                 <div className="p-2">{course.owner_name}</div>
               </Typography>
             </CardContent>

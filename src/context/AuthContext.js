@@ -15,6 +15,7 @@ export const AuthContextProvider = ({ children }) => {
       try {
         const response = await axiosInstance.get('/api/.me');
         setUser(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error('Fetch user data failed:', error);
       }

@@ -24,7 +24,7 @@ import { useAuth } from "../context/AuthContext";
 import axiosInstance from "../api/axios";
 export default function Header() {
   const [activeLink, setActiveLink] = useState("");
-  const settings = ["Profile", "Account", "Dashboard", "Logout"];
+  const settings = [ "Logout"];
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [visible, setVisible] = useState(false);
@@ -33,7 +33,7 @@ export default function Header() {
   const [description, setDescription] = useState("");
   const [groupName, setGroupName] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
-  const { logout } = useAuth();
+  const { logout,user } = useAuth();
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const toast = useRef(null);
@@ -68,13 +68,30 @@ export default function Header() {
 
   const handleClose = () => {
     setAnchorEl(null);
+
   };
+
+  const handleCloseCourse = () => {
+    setVisible(false);
+  }
+  const handleCloseGroup = () => {
+    setGroupAddVisible(false);
+  }
+
+  
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+
+  };
+
+  const handleLogout = () => {
+    setAnchorElUser(null);
+
+    logout();
   };
   const handleLinkClick = (link) => {
     setActiveLink(link);
@@ -89,8 +106,31 @@ export default function Header() {
     };
     try {
       await axiosInstance.post("/api/library/course", data);
-      showSuccess("Add course success");
-      navigate("/library", { replace: true });
+      navigate("/library");
+      window.location.reload();
+      showSuccess("Add course success")
+
+    } catch (error) {
+      if (error.response.status === 401) logout();
+      showError("Some thing went wrong");
+    }
+  };
+
+
+
+  const handleAddGroup = async () => {
+    setGroupAddVisible(false);
+
+    const data = {
+      groupName,
+      groupDescription,
+    };
+    try {
+      await axiosInstance.post("/api/group", data);
+      navigate("/group");
+      window.location.reload();
+      showSuccess("Add Group success")
+
     } catch (error) {
       if (error.response.status === 401) logout();
       showError("Some thing went wrong");
@@ -214,6 +254,7 @@ export default function Header() {
                 visible={visible}
                 setVisible={setVisible}
                 header={"Create Course"}
+                handleClose={handleCloseCourse}
               >
                 <div className="py-3">
                   <TextField
@@ -246,6 +287,7 @@ export default function Header() {
                 visible={groupAddVisile}
                 setVisible={setGroupAddVisible}
                 header={"Create Group"}
+                handleClose={handleCloseGroup}
               >
                 <div className="py-3">
                   <TextField
@@ -253,6 +295,7 @@ export default function Header() {
                     label="Group Name"
                     variant="standard"
                     sx={{ width: "70%" }}
+                    onChange={(e) => setGroupName(e.target.value)}
                   />
 
                   <TextField
@@ -260,8 +303,9 @@ export default function Header() {
                     label="Description"
                     variant="standard"
                     sx={{ width: "70%" }}
+                    onChange={(e) => setGroupDescription(e.target.value)}
                   />
-                  <div className="py-7">
+                  <div className="py-7" onClick={async ()=>{await handleAddGroup()}}>
                     <Button variant="contained" size="small">
                       Add Group
                     </Button>
@@ -304,7 +348,7 @@ export default function Header() {
               </Paper>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt="Remy Sharp" src={user?.avatar} />
                 </IconButton>
               </Tooltip>
 
@@ -325,7 +369,7 @@ export default function Header() {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem key={setting} onClick={handleLogout}>
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}

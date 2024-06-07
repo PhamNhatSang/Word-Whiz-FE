@@ -8,6 +8,7 @@ import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import IconButton from "@mui/material/IconButton";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { Rate } from 'antd';
 
 export default function CourseDetailPage() {
   const { courseId } = useParams();
@@ -15,6 +16,7 @@ export default function CourseDetailPage() {
   const [course, setCourse] = useState({});
   const [words, setWords] = useState([]);
   const [selectedWord, setSelectedWord] = useState(null);
+  const [rate, setRate] = useState(0);
   const [page, setPage] = useState(0);
   const { user } = useAuth();
   const responsiveOptions = [
@@ -46,10 +48,19 @@ export default function CourseDetailPage() {
     
       setCourse(res.data);
       setWords(res.data?.words);
+      setRate(res.data?.rate);
       setSelectedWord(res.data?.words[0]);
     };
     fetchData();
   }, []);
+
+  const handleRate = async (value) => {
+    
+    await axiosInstance.post(`/api/course/rate/${courseId}`, {
+      rate: value,
+    });
+    setRate(value);
+  }
 
   const FlashCardD = () => {
     return (
@@ -75,6 +86,8 @@ export default function CourseDetailPage() {
           </IconButton>
         </Link>)}
       </div>
+      <div className="px-64" ><Rate allowHalf value={rate}  onChange={async (value)=>(await handleRate(value))}/></div>
+
 
       <div className=" py-10 flex flex-row ">
         {words.length > 0?( <div className="w-1/2 h-fit flex flex-col items-center justify-center">
