@@ -21,7 +21,7 @@ export default function TestPage() {
       percentage: 0,
       score: 0,
     },
-    testItems: [],
+    listTestItems: [],
   });
   const [isSubmit, setIsSubmit] = useState(false);
   const [test, setTest] = useState({
@@ -30,7 +30,7 @@ export default function TestPage() {
     updatedAt: "",
     score: 0,
     isFirstDone: false,
-    testItems: [],
+    listTestItems: [],
   });
   const { courseId } = useParams();
 
@@ -39,7 +39,7 @@ export default function TestPage() {
       try {
         const res = await axiosInstance.post(`/api/learning/test/${courseId}`);
         setTest(res.data);
-        console.log(res.data.testItems);
+        console.log(res.data.listTestItems);
       } catch (e) {
         console.log(e);
       }
@@ -78,11 +78,11 @@ export default function TestPage() {
         <div className="w-full flex flex-col items-center">
           {" "}
           <div className="text-2xl font-semibold">{test?.courseName}</div>
-          {test.testItems.map((item, index) => (
+          {test.listTestItems.map((item, index) => (
             <TestItem
               testItem={item}
               index={index}
-              length={test.testItems.length}
+              length={test.listTestItems.length}
             ></TestItem>
           ))}
           <div className="text-xl ">Submit your test</div>
@@ -102,11 +102,11 @@ export default function TestPage() {
           <div className="text-2xl font-semibold">
             {test?.courseName}
           </div>
-          {result?.testItems.map((item, index) => (
+          {result?.listTestItems.map((item, index) => (
             <TestResultItem
               testItem={item}
               index={index}
-              length={result?.testItems.length}
+              length={result?.listTestItems.length}
             ></TestResultItem>
           ))}
           <div className="text-xl ">Reload the test or back to Course</div>
