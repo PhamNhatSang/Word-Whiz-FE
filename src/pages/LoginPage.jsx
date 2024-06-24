@@ -9,13 +9,10 @@ import Grid from "@mui/material/Grid";
 import image from "../assets/Web capture_2-5-2024_91421_www.logoai.com.jpeg";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Navigate } from "react-router-dom";
-import { Alert } from "@mui/material";
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from "react-router-dom";
-import { useContext } from 'react';
-import axios from "axios";
-
+import backgbImg from "../assets/44224927-learning-word-cloud-business-concept.jpg"
+import {message } from 'antd';
 function Copyright(props) {
   return (
     <Typography
@@ -26,7 +23,7 @@ function Copyright(props) {
     >
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Word Whiz
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -48,10 +45,12 @@ export default function LoginPage() {
     const password = data.get("password");
     try{
       await login({email, password});
+      message.success('Login success');
 
     }
     catch(error){
       console.error('Login failed:', error);
+      message.error('Login failed');
     }
   };
 
@@ -66,7 +65,7 @@ export default function LoginPage() {
           md={7}
           sx={{
             backgroundImage:
-              "url(https://source.unsplash.com/random?wallpapers)",
+              `url(${backgbImg})`,
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -128,9 +127,7 @@ export default function LoginPage() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
+                 
                 </Grid>
                 <Grid item>
                   <Link href="/signup" variant="body2">

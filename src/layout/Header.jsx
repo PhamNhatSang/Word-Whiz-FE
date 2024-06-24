@@ -241,13 +241,14 @@ export default function Header() {
                     <span className="text-gray-500">Create course</span>
                   </span>
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
+                {user?.role === "TEACHER" && ( <MenuItem onClick={handleClose}>
                   <span onClick={handleOpenAddGroupDalog}>
                     {" "}
                     <GroupOutlinedIcon color="disabled"></GroupOutlinedIcon>{" "}
                     <span className="text-gray-500">Create group</span>
                   </span>
-                </MenuItem>
+                </MenuItem>)}
+               
               </Menu>
 
               <CreateDialog

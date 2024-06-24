@@ -17,6 +17,7 @@ import image from '../assets/Web capture_2-5-2024_91421_www.logoai.com.jpeg';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import {message} from 'antd';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -50,17 +51,17 @@ export default function RegisterPage() {
     axios.post('https://word-whiz-production.up.railway.app/api/auth/register', {
       email: email,
       password: password,
-      username: username,
+      name: username,
       role: role,
     })
       .then((response) => {
         console.log(response);
-        alert('Register Success');
+        message.success('Register Success');
         navigate('/');
       })
       .catch((error) => {
         console.log(error);
-        alert('Register Failed');
+        message.error('Register Failed');
       });
   };
 
@@ -78,7 +79,7 @@ export default function RegisterPage() {
         >
                      <img src={image} alt="logo" />
 
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" >
             Sign up
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>

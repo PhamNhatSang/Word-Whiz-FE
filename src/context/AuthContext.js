@@ -15,7 +15,6 @@ export const AuthContextProvider = ({ children }) => {
       try {
         const response = await axiosInstance.get('/api/.me');
         setUser(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error('Fetch user data failed:', error);
       }
@@ -31,8 +30,8 @@ export const AuthContextProvider = ({ children }) => {
       const response = await axiosInstance.post('/api/auth/login', credentials);
       const { accessToken } = response.data;
       setAccessToken(accessToken);
-      localStorage.setItem('accessToken', accessToken); // Optionally store token in localStorage
-      navigate('/home'); // Navigate to home after setting the token
+      localStorage.setItem('accessToken', accessToken);
+      navigate('/home'); 
     } catch (error) {
       console.error('Login failed:', error);
     }
