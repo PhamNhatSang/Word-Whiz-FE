@@ -73,7 +73,7 @@ export default function FlashCardLearningPage() {
   };
   return (
     <div className=" flex flex-col justify-center items-center h-full">
-      <div className="text-3xl">Shinkanzen N2</div>
+      <div className="text-3xl">{flashCardLearn?.courseName}</div>
       <div className="">{(page +1)+ "/" + flashCardLearn.words.length}</div>
 
       <div className="w-1/2 ">
