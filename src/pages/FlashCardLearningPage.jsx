@@ -35,6 +35,7 @@ export default function FlashCardLearningPage() {
     courseId: "",
     words: [],
     lastWordIndex: 0,
+    courseName: "",
     isDone: false,
   });
   const [page, setPage] = useState(0);
