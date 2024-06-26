@@ -2,6 +2,8 @@ import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import React, { useEffect, useState,useRef } from "react";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import IconButton from "@mui/material/IconButton";
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
 import CourseItem from "../components/CourseItem.component";
@@ -31,6 +33,7 @@ export default function GroupDetailPage() {
   const [courseInGroup, setCourseInGroup] = useState([]);
   const [listCourseToAdd, setListCourseToAdd] = useState([]);
   const [studentInGroup, setStudentInGroup] = useState([]);
+  const nagative = useNavigate();
   const { user } = useAuth();
   const {groupId}= useParams();
   const toast = useRef(null);
@@ -117,6 +120,19 @@ export default function GroupDetailPage() {
       console.log(e);
     }
   }
+  const handleDeleteGroup= async ()=>{
+    try{
+      await axiosInstance.delete(`/api/group/${groupId}`);
+      nagative('/group');
+      showSuccess("Delete group successfully");
+
+
+    }catch(e){
+      showError("Delete group failed");
+
+      console.log(e);
+    }
+  }
 
   useEffect(() => {
 
@@ -145,7 +161,7 @@ export default function GroupDetailPage() {
         </div>
         <h1 className="text-3xl font-semibold">{group?.group_name}</h1>
       </div>
-      <div className="flex flex-row items-center ">
+      {group?.owner_id === user?.id && (<div className="flex flex-row items-center ">
         <Tooltip title={<Title text={"Add courses"}></Title>}>
           <IconButton color="primary" onClick={async () =>{await handleListCourseToAdd()} }>
             <AddOutlinedIcon sx={{ height: 35, width: 35 }}></AddOutlinedIcon>
@@ -156,6 +172,13 @@ export default function GroupDetailPage() {
             <GroupAddOutlinedIcon
               sx={{ height: 35, width: 35 }}
             ></GroupAddOutlinedIcon>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={<Title text={"Delete group"}></Title>}>
+          <IconButton color="error" onClick={async ()=> {await handleDeleteGroup()}}>
+            <DeleteOutlineOutlinedIcon
+              sx={{ height: 35, width: 35 }}
+            ></DeleteOutlineOutlinedIcon>
           </IconButton>
         </Tooltip>
         <AddCourseDialog
@@ -172,7 +195,9 @@ export default function GroupDetailPage() {
           handleAddMember={handleAddMember}
           groupId={groupId}
         ></AddMemberDialog>
-      </div>
+
+      </div>)}
+      
       <div className="w-full py-4">
         {" "}
         <FormControl sx={{ minWidth: 120 }}>

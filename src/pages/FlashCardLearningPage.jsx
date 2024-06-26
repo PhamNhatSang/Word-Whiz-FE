@@ -55,7 +55,7 @@ export default function FlashCardLearningPage() {
       <FlashCard
         word={word}
         height={"40rem"}
-        wordClass={"max-w-2xl break-words	"}
+        wordClass={"max-w-2xl break-words text-4xl"}
       />
     );
   };

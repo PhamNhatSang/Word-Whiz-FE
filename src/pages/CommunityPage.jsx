@@ -271,6 +271,7 @@ export default function CommunityPage() {
             post={post}
             key={index}
             user={user}
+            setListPost={setListPost}
           ></PostItemComponent>
         )))}
     </div>

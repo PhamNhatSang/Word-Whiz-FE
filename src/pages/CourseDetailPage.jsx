@@ -67,7 +67,7 @@ export default function CourseDetailPage() {
       <FlashCard
         word={selectedWord}
         height={"20rem"}
-        wordClass={"max-w-sm break-words"}
+        wordClass={"max-w-sm break-words text-xl"}
       ></FlashCard>
     );
   };
