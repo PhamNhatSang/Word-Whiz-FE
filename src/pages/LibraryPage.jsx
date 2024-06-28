@@ -105,8 +105,8 @@ export default function LibraryPage() {
   return (
     <div className="px-60">
       <div class="flex flex-row items-center py-4">
-        <Avatar sx={{ height: 70, width: 70 }} alt="Remy Sharp" src={image} />
-        <div class="px-4 text-4xl">Name</div>
+        <Avatar sx={{ height: 70, width: 70 }} alt="Remy Sharp" src={user.avatar} />
+        <div class="px-4 text-4xl">{user.name}</div>
       </div>
       <div class="py-10 flex justify-between " style={{ width: "70%" }}>
         <FormControl sx={{ minWidth: 120 }}>

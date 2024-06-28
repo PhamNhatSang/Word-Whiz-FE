@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axiosInstance from "../api/axios";
 import { Spin } from "antd";
+import { useAuth } from "../context/AuthContext";
 export default function GroupPage() {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
   useEffect(() => {
     async function fetchData() {
       try {
@@ -26,8 +28,8 @@ export default function GroupPage() {
   return (
     <div className="px-60">
       <div class="flex flex-row items-center py-4">
-        <Avatar sx={{ height: 70, width: 70 }} alt="Remy Sharp" src={image} />
-        <div class="px-4 text-4xl">Name</div>
+        <Avatar sx={{ height: 70, width: 70 }} alt="Remy Sharp" src={user?.avatar} />
+        <div class="px-4 text-4xl">{user?.name}</div>
       </div>
       <div>List Groups</div>
       {loading ? (

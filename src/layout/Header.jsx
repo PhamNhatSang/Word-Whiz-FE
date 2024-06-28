@@ -22,9 +22,13 @@ import CreateDialog from "../components/CreateDialog.component";
 import { Toast } from "primereact/toast";
 import { useAuth } from "../context/AuthContext";
 import axiosInstance from "../api/axios";
+import languagesWithColors from "../constant/category";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
 export default function Header() {
   const [activeLink, setActiveLink] = useState("");
-  const settings = [ "Logout"];
+  const settings = ["Logout"];
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [visible, setVisible] = useState(false);
@@ -33,8 +37,11 @@ export default function Header() {
   const [description, setDescription] = useState("");
   const [groupName, setGroupName] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
-  const { logout,user } = useAuth();
+  const [selectedLanguage, setSelectedLanguage] = useState(languagesWithColors[0].language);
+
+  const { logout, user } = useAuth();
   const open = Boolean(anchorEl);
+
   const navigate = useNavigate();
   const toast = useRef(null);
 
@@ -68,24 +75,26 @@ export default function Header() {
 
   const handleClose = () => {
     setAnchorEl(null);
-
   };
 
   const handleCloseCourse = () => {
     setVisible(false);
-  }
+  };
   const handleCloseGroup = () => {
     setGroupAddVisible(false);
-  }
+  };
 
-  
+  const handleChangeLangue = (value) => {
+    console.log(value);
+    setSelectedLanguage(value.target.value);
+  };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-
   };
 
   const handleLogout = () => {
@@ -108,15 +117,12 @@ export default function Header() {
       await axiosInstance.post("/api/library/course", data);
       navigate("/library");
       window.location.reload();
-      showSuccess("Add course success")
-
+      showSuccess("Add course success");
     } catch (error) {
       if (error.response.status === 401) logout();
       showError("Some thing went wrong");
     }
   };
-
-
 
   const handleAddGroup = async () => {
     setGroupAddVisible(false);
@@ -129,8 +135,7 @@ export default function Header() {
       await axiosInstance.post("/api/group", data);
       navigate("/group");
       window.location.reload();
-      showSuccess("Add Group success")
-
+      showSuccess("Add Group success");
     } catch (error) {
       if (error.response.status === 401) logout();
       showError("Some thing went wrong");
@@ -139,7 +144,7 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 w-full z-10">
-                  <Toast ref={toast} />
+      <Toast ref={toast} />
 
       <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800   shadow-bottom ">
         <div class="flex flex-wrap justify-between items-center  ">
@@ -241,14 +246,15 @@ export default function Header() {
                     <span className="text-gray-500">Create course</span>
                   </span>
                 </MenuItem>
-                {user?.role === "TEACHER" && ( <MenuItem onClick={handleClose}>
-                  <span onClick={handleOpenAddGroupDalog}>
-                    {" "}
-                    <GroupOutlinedIcon color="disabled"></GroupOutlinedIcon>{" "}
-                    <span className="text-gray-500">Create group</span>
-                  </span>
-                </MenuItem>)}
-               
+                {user?.role === "TEACHER" && (
+                  <MenuItem onClick={handleClose}>
+                    <span onClick={handleOpenAddGroupDalog}>
+                      {" "}
+                      <GroupOutlinedIcon color="disabled"></GroupOutlinedIcon>{" "}
+                      <span className="text-gray-500">Create group</span>
+                    </span>
+                  </MenuItem>
+                )}
               </Menu>
 
               <CreateDialog
@@ -272,12 +278,35 @@ export default function Header() {
                     variant="standard"
                     onChange={(e) => setDescription(e.target.value)}
                     sx={{ width: "70%" }}
-                  />
+                  /> <Box className=" mt-4" component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                        <FormControl variant="standard" sx={{minWidth: 120 }}>
+                        <InputLabel id="demo-simple-select-standard-label">Language</InputLabel>
+
+
+                 <Select
+                    labelId="demo-simple-select-standard-label"
+                    native
+                    id="demo-simple-select-standard"
+                    value={selectedLanguage}
+                    onChange={handleChangeLangue}
+                    label="Language"
+                  >
+                  {languagesWithColors.map((lang) => (
+                      <option
+                       value={lang.language}>{lang.language}</option>
+                    ))}
+                  </Select>
+                  
+                  </FormControl>
+                  </Box>
+
                   <div className="py-7">
                     <Button
                       variant="contained"
                       size="small"
-                      onClick={async () =>{ await handleAddCourse()}}
+                      onClick={async () => {
+                        await handleAddCourse();
+                      }}
                     >
                       Add Course
                     </Button>
@@ -306,7 +335,14 @@ export default function Header() {
                     sx={{ width: "70%" }}
                     onChange={(e) => setGroupDescription(e.target.value)}
                   />
-                  <div className="py-7" onClick={async ()=>{await handleAddGroup()}}>
+
+        
+                  <div
+                    className="py-7"
+                    onClick={async () => {
+                      await handleAddGroup();
+                    }}
+                  >
                     <Button variant="contained" size="small">
                       Add Group
                     </Button>

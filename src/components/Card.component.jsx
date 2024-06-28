@@ -7,6 +7,7 @@ import Avatar from "@mui/material/Avatar";
 import ItemText from "./ItemText.component";
 import { Link } from "react-router-dom";
 import { Star } from "@mui/icons-material";
+import getColor from "../utils/getColor";
 export default function CardItem({ course }) {
   const Header = () => {
     return (
@@ -36,8 +37,9 @@ export default function CardItem({ course }) {
             </div>
 
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                <ItemText text={course.terms + " terms"} />
+              <Typography className="flex flex-row" gutterBottom variant="h5" component="div">
+                <div className=" mr-2"> <ItemText text={course.terms + " terms"} /></div>
+               <div> <ItemText text={course.language} color={getColor(course.language)} /></div>
               </Typography>
               <Typography
                 class="flex flex-row items-center"
