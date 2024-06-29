@@ -12,7 +12,7 @@ import  FlashCardLearningPage  from "../pages/FlashCardLearningPage";
 import TestPage from "../pages/TestPage";
 import EditCourseDetailPage from "../pages/EditCourseDetailPage";
 import ProtectedRoute from "./ProtectedRoute";
-
+import NotFoundPage from "../pages/NotFoundPage";
 export const publicRoutes = [
     { path: '/', element: LoginPage },
     { path: '/signup', element: RegisterPage },
@@ -26,6 +26,7 @@ export const publicRoutes = [
     { path: '/library/course/:courseId/flashcard', element: FlashCardLearningPage,layout: DefaultLayout,auth:ProtectedRoute},
     { path: '/library/course/:courseId/test', element: TestPage,layout: DefaultLayout,auth:ProtectedRoute},
     { path: '/library/course/edit/:courseId', element: EditCourseDetailPage,layout: DefaultLayout,auth:ProtectedRoute},
+    {path:'/404',element:NotFoundPage}
 
 
 ];

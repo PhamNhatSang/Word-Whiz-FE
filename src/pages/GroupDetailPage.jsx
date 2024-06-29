@@ -34,7 +34,7 @@ export default function GroupDetailPage() {
   const [listCourseToAdd, setListCourseToAdd] = useState([]);
   const [studentInGroup, setStudentInGroup] = useState([]);
   const nagative = useNavigate();
-  const { user } = useAuth();
+  const { user ,logout} = useAuth();
   const {groupId}= useParams();
   const toast = useRef(null);
   const handleChange = (event) => {
@@ -144,6 +144,12 @@ export default function GroupDetailPage() {
         setCourseInGroup(res.data?.courses);
         setStudentInGroup(res.data?.students);
       } catch (e) {
+        if(e.response.status===404){
+          nagative('/404');
+        }
+        if(e.response.status===401){
+         logout();
+        }
         console.log(e);
       }
     }

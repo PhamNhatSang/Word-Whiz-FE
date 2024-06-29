@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Rate } from 'antd';
-
+import { useNavigate } from "react-router-dom";
 export default function CourseDetailPage() {
   const { courseId } = useParams();
   const [selectedProduct, setSelectedProduct] = useState([]);
@@ -18,7 +18,8 @@ export default function CourseDetailPage() {
   const [selectedWord, setSelectedWord] = useState(null);
   const [rate, setRate] = useState(0);
   const [page, setPage] = useState(0);
-  const { user } = useAuth();
+  const { user,logout } = useAuth();
+  const nagative = useNavigate();
   const responsiveOptions = [
     {
       breakpoint: "1400px",
@@ -44,12 +45,25 @@ export default function CourseDetailPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axiosInstance.get(`/api/course/${courseId}`);
+      try{
+        const res = await axiosInstance.get(`/api/course/${courseId}`);
     
-      setCourse(res.data);
-      setWords(res.data?.words);
-      setRate(res.data?.rate);
-      setSelectedWord(res.data?.words[0]);
+        setCourse(res.data);
+        setWords(res.data?.words);
+        setRate(res.data?.rate);
+        setSelectedWord(res.data?.words[0]);
+      }catch(error){
+        if(error?.response?.status === 401){
+          logout()
+
+        }
+        if(error?.response?.status === 404){
+          nagative('/404')
+        }
+
+        console.error('Fetch course data failed:', error);
+      }
+     
     };
     fetchData();
   }, []);

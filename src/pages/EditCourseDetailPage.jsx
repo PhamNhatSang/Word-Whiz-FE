@@ -8,9 +8,11 @@ import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
 import axiosInstance from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 export default function EditCourseDetailPage() {
   const { courseId } = useParams();
   const [loading, setLoading] = useState(false);
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const [course, setCourse] = useState({
     id: null,
@@ -50,10 +52,22 @@ export default function EditCourseDetailPage() {
   };
 
   useEffect(() => {
+  
     const fetchData = async () => {
-      const res = await axiosInstance.get(`/api/course/${courseId}`);
-      console.log(res.data);
-      setCourse(res.data);
+      try {
+        const res = await axiosInstance.get(`/api/course/${courseId}`);
+        console.log(res.data);
+        setCourse(res.data);
+      } catch (error) {
+        
+        if(error.response.status === 404){
+          navigate('/404')
+        }
+        if(error.response.status === 401){
+          logout()
+        }
+      }
+     
     };
     fetchData();
   }, []);
