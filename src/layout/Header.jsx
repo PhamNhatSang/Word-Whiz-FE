@@ -26,6 +26,12 @@ import languagesWithColors from "../constant/category";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
+import MilitaryTechOutlinedIcon from '@mui/icons-material/MilitaryTechOutlined';
+import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
+import { Home } from "@mui/icons-material";
+
 export default function Header() {
   const [activeLink, setActiveLink] = useState("");
   const settings = ["Logout"];
@@ -153,68 +159,71 @@ export default function Header() {
             class="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
             id="mobile-menu-2"
           >
-            <a href="https://flowbite.com" class="flex items-center">
+            <a href="/home" class="flex items-center">
               <img src={image} class="mr-2 h-4 sm:h-8" alt="Flowbite Logo" />
             </a>
 
             <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-              <li>
-                <Link
+            <li >
+            <Link
                   to="/home"
                   onClick={() => handleLinkClick("home")}
-                  className={`block py-2 pr-4 pl-3 ${
+                  className={` py-2 pr-4 pl-3 flex flex-row items-center ${
                     activeLink === "home" ? "text-blue-700" : "text-dark-700"
                   }`}
                 >
-                  Home
+                  <HomeOutlinedIcon ></HomeOutlinedIcon>
+                  <div>Home</div>
                 </Link>
               </li>
               <li>
                 <Link
                   to="/library"
                   onClick={() => handleLinkClick("libary")}
-                  className={`block py-2 pr-4 pl-3 ${
+                  className={` py-2 pr-4 pl-3 flex flex-row items-center ${
                     activeLink === "libary" ? "text-blue-700" : "text-dark-700"
                   }`}
                 >
-                  Library
+                  <LibraryBooksOutlinedIcon ></LibraryBooksOutlinedIcon>
+                  <div>Library</div>
                 </Link>
-                {""}
+            
               </li>
               <li>
                 <Link
                   to="/group"
                   onClick={() => handleLinkClick("group")}
-                  className={`block py-2 pr-4 pl-3 ${
+                  className={` py-2 pr-4 pl-3 flex flex-row items-center ${
                     activeLink === "group" ? "text-blue-700" : "text-dark-700"
                   }`}
                 >
-                  Group
-                </Link>{" "}
+                  <GroupOutlinedIcon></GroupOutlinedIcon>
+                  <div>Group</div>
+                </Link>
               </li>
               <li>
                 <Link
                   to="/ranking"
                   onClick={() => handleLinkClick("ranking")}
-                  className={`block py-2 pr-4 pl-3 ${
+                  className={` py-2 pr-4 pl-3 flex flex-row items-center ${
                     activeLink === "ranking" ? "text-blue-700" : "text-dark-700"
                   }`}
-                >
-                  Ranking
-                </Link>{" "}
+                ><MilitaryTechOutlinedIcon></MilitaryTechOutlinedIcon>
+                  <div>Ranking</div>
+                  </Link>
               </li>
-              <li>
+              <li className="flex flex-row items-center">
                 <Link
                   to="/community"
                   onClick={() => handleLinkClick("community")}
-                  className={`block py-2 pr-4 pl-3 ${
+                  className={` py-2 pr-4 pl-3 flex flex-row items-center ${
                     activeLink === "community"
                       ? "text-blue-700"
                       : "text-dark-700"
                   }`}
-                >
-                  Community
-                </Link>{" "}
+                > <ForumOutlinedIcon ></ForumOutlinedIcon>
+                  <div>Community</div>
+                  </Link>
               </li>
             </ul>
           </div>
