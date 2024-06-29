@@ -115,7 +115,7 @@ export default function CourseDetailPage() {
             setPage={setPage}
             words={words}
             courseId={courseId}
-            inLibrary={course?.isInLibrary}
+            inLibrary={course.isInLibrary}
           ></WordList>
         </div>
       </div>

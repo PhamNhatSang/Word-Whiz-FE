@@ -99,7 +99,7 @@ export default function WordList({
           </div>
         </div>
         <div>
-          {isInLibrary ? (  <Button onClick={async ()=>{await handleAddToLibrary()}} startIcon={<FileDownloadIcon />}>Import Course</Button>):(<div className=" text-green-300"> In library</div>)}
+          {!isInLibrary ? (  <Button onClick={async ()=>{await handleAddToLibrary()}} startIcon={<FileDownloadIcon />}>Import Course</Button>):(<div className=" text-green-300"> In library</div>)}
         </div>
       </div>
     );

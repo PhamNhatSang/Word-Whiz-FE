@@ -112,6 +112,7 @@ export default function Header() {
     const data = {
       title,
       description,
+      language: selectedLanguage,
     };
     try {
       await axiosInstance.post("/api/library/course", data);
