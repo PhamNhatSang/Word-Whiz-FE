@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -9,7 +9,7 @@ import Avatar from "@mui/material/Avatar";
 import image from "../assets/Web capture_2-5-2024_91421_www.logoai.com.jpeg";
 import CreateDialog from "../components/CreateDialog.component";
 import AddCoursePostDialog from "../components/AddCoursePostDialog.component";
-import { Input } from "antd";
+import { Input, message } from "antd";
 import { Spin } from "antd";
 import { Toast } from "primereact/toast";
 import CourseAddPostItem from "../components/CourseAddPostItem.component";
@@ -30,13 +30,17 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
+
 export default function CommunityPage() {
   const [openDialog, setOpenDialog] = useState(false);
   const [openAddCourseDialog, setOpenAddCourseDialog] = useState(false);
   const [content, setContent] = useState("");
   const toast = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-  const {user} = useAuth();
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const { user } = useAuth();
   const [listCourseToAdd, setListCourseToAdd] = useState([
     { courseId: 0, courseName: "Course 1", isInPost: false },
   ]);
@@ -46,6 +50,8 @@ export default function CommunityPage() {
       content: "",
       postId: 0,
       userId: 0,
+      numberOfLikes: 0,
+      numberOfComments: 0,
       userAvatar: "",
       userName: "",
       imageUrl: "",
@@ -54,18 +60,16 @@ export default function CommunityPage() {
     },
   ]);
 
-  const showSuccess = (Message) => {  
+  const showSuccess = (Message) => {
     toast.current.show({
       severity: "success",
       summary: "Success",
       detail: Message,
       life: 3000,
     });
-
-
   };
-  const showError = (Message) => {
 
+  const showError = (Message) => {
     toast.current.show({
       severity: "error",
       summary: "Error",
@@ -73,6 +77,7 @@ export default function CommunityPage() {
       life: 3000,
     });
   };
+
   const [selectedFiles, setSelectedFiles] = useState(null);
   const [fileUrls, setFileUrls] = useState([]);
   const handleFileChange = (event) => {
@@ -85,13 +90,41 @@ export default function CommunityPage() {
     }
   };
 
+  const handleGetMorePost = async () => {
+    try {
+      setLoadingMore(true);
+      const nextPage = page + 1;
+      const res = await axiosInstance.get(`/api/community?page=${nextPage}`);
+      const newPosts = res.data;
+      if (newPosts.length === 0) {
+        setHasMore(false);
+      } else {
+        const newPostData=[]
+        listPost.concat(newPosts).forEach((post) => {
+          if (!newPostData.find((newPost) => newPost.postId === post.postId)) {
+            newPostData.push(post);
+          }
+        });
+          
+        setListPost(newPostData);
+        setPage(nextPage);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
   const handleUploadPost = async () => {
-    try{
-    setSelectedFiles(null);
+    try {
+      setSelectedFiles(null);
     setFileUrls([]); // Clear the file URLs
 
     setOpenDialog(false);   
     setIsLoading(true);
+      
+
       const formData = new FormData();
       formData.append("file", selectedFiles);
       formData.append("content", content);
@@ -100,31 +133,28 @@ export default function CommunityPage() {
         if (course.isInPost)  
         listCourseId.push(course.courseId);
       });
-      formData.append("listCourseId", listCourseId); // Convert to JSON string
+      formData.append("listCourseId", listCourseId);
+
       const response = await axiosInstance.post(
         "/api/community/post",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      console.log(response.data);
-      const newListPost = [...listPost]
-      newListPost.push(response.data);
-      newListPost.sort((a, b) => b.postId - a.postId);
-      setListPost(newListPost)
-     
-      showSuccess("Post successfully");
-    }catch(e){
-      showError("Post failed");
-    }finally{
+
+      const newPost = response.data;
+      setListPost((prevPosts) => [newPost, ...prevPosts]);
+      message.success("Post uploaded successfully");
+      setHasMore(true);
+    } catch (e) {
+      message.error("Upload post failed");
+    } finally {
       setIsLoading(false);
     }
-    
   };
 
   const handleOpenDialog = async () => {
     try {
       const res = await axiosInstance.get(`/api/library/course-add-post`);
-      console.log(res.data);
       setListCourseToAdd(res.data);
       setOpenAddCourseDialog(true);
     } catch (e) {
@@ -134,23 +164,20 @@ export default function CommunityPage() {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    setListCourseToAdd([])
+    setListCourseToAdd([]);
     setContent("");
     setFileUrls([]);
-  }
-
-
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const res = await axiosInstance.get(`/api/community`);
+        const res = await axiosInstance.get(`/api/community?page=${page}`);
         setListPost(res.data);
-        console.log(res.data);
       } catch (e) {
         console.log(e);
-      }finally{
+      } finally {
         setIsLoading(false);
       }
     };
@@ -165,21 +192,12 @@ export default function CommunityPage() {
         style={{ width: "36%" }}
       >
         <div className="p-2 flex flex-row justify-between">
-          <div>
-            <Avatar
-              alt="dsad"
-              sx={{ width: 45, height: 45 }}
-              src={user?.avatar}
-            ></Avatar>
-          </div>
+          <Avatar alt="dsad" sx={{ width: 45, height: 45 }} src={user?.avatar} />
           <div
             className=" w-11/12  cursor-pointer  bg-blue-gray-50 hover:bg-blue-gray-100 rounded-r-full rounded-l-full flex flex-col justify-center"
             onClick={() => setOpenDialog(true)}
           >
-            <div className="p-3  text-blue-gray-200">
-              {" "}
-              Share something today
-            </div>
+            <div className="p-3 text-blue-gray-200">Share something today</div>
           </div>
         </div>
       </div>
@@ -191,7 +209,6 @@ export default function CommunityPage() {
         width={"35vw"}
       >
         <div className="card flex justify-content-center">
-        
           <TextArea
             placeholder="Share something today"
             autoSize
@@ -221,20 +238,15 @@ export default function CommunityPage() {
                   setListCourseToAdd={setListCourseToAdd}
                   listCourseToAdd={listCourseToAdd}
                   isSwitched={false}
-                ></CourseAddPostItem>
+                />
               )
           )}
         </div>
         <div className="flex flex-row">
-          <IconButton
-            component="label"
-            variant="contained"
-            startIcon={<CloudUploadIcon />}
-          >
-            <FilterIcon color="success"></FilterIcon>
+          <IconButton component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+            <FilterIcon color="success" />
             <VisuallyHiddenInput type="file" onChange={handleFileChange} />
           </IconButton>
-
           <IconButton
             component="label"
             variant="contained"
@@ -242,7 +254,7 @@ export default function CommunityPage() {
               await handleOpenDialog();
             }}
           >
-            <CollectionsBookmarkIcon color="primary"></CollectionsBookmarkIcon>
+            <CollectionsBookmarkIcon color="primary" />
           </IconButton>
         </div>
         <div
@@ -251,7 +263,7 @@ export default function CommunityPage() {
             await handleUploadPost();
           }}
         >
-          <Button className="w-full" variant="contained" disabled={content===''}>
+          <Button className="w-full" variant="contained" disabled={content === ''}>
             Post
           </Button>
         </div>
@@ -261,19 +273,45 @@ export default function CommunityPage() {
         setVisible={setOpenAddCourseDialog}
         listCourseToAdd={listCourseToAdd}
         setListCourseAdd={setListCourseToAdd}
-      ></AddCoursePostDialog>
-          {isLoading ? ( <div className="w-full flex mt-11 justify-center items-center">
-        
-        <Spin size="large" />
-      </div>):(listPost &&
-        listPost.map((post, index) => (
-          <PostItemComponent
-            post={post}
-            key={index}
-            user={user}
-            setListPost={setListPost}
-          ></PostItemComponent>
-        )))}
+      />
+     {isLoading ? (
+    <div className="w-full flex mt-11 justify-center items-center">
+      <Spin size="large" />
+    </div>
+  ) : (
+    <>
+      {Array.from(listPost).map((post, index) => (
+        <PostItemComponent
+          post={post}
+          key={index}
+          user={user}
+          setListPost={setListPost}
+          setIsLoading={setIsLoading}
+          setHasMore={setHasMore}
+          setPage={setPage}
+        />
+      ))}
+
+      {loadingMore && (
+        <div className="w-full flex mt-11 justify-center items-center">
+          <Spin size="large" />
+        </div>
+      )}
+
+      {hasMore ? (
+        <div
+          className="w-full flex mt-11 justify-center items-center"
+          onClick={async () => {
+            await handleGetMorePost();
+          }}
+        >
+          <Button variant="text">Load more</Button>
+        </div>
+      ) : (
+        <div className=" mt-4">There are no posts</div>
+      )}
+    </>
+  )}
     </div>
   );
 }

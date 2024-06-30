@@ -31,19 +31,23 @@ export default function TestItem({ testItem, index, length }) {
         </div>
         <div className="py-3 break-words">{testItem?.question}</div>
         <div className="answer flex flex-row  justify-between flex-wrap py-24">
+        {[testItem?.option_1, testItem?.option_2, testItem?.option_3, testItem?.option_4].map((option, idx) => (
+          option!="" &&
+
           <div
             className="w-1/2 h-20 cursor-pointer"
-            onClick={ async () =>(await handleSelection(testItem?.option_1))}
+            onClick={ async () =>(await handleSelection(option))}
           >
             <div
               style={{ maxWidth: "95%", maxHeight: "90%" }}
-              className={` flex flex-col  justify-center w-full h-full  border-2 rounded-lg	${selectedOption == testItem?.option_1 ? "border-blue-800 bg-blue-50" : " border-gray-300 hover:border-gray-800"}`}
+              className={` flex flex-col  justify-center w-full h-full  border-2 rounded-lg	${selectedOption == option ? "border-blue-800 bg-blue-50" : " border-gray-300 hover:border-gray-800"}`}
             >
-              <div className="break-words p-2">{testItem?.option_1}</div>
+              <div className="break-words p-2">{option}</div>
             </div>
           </div>
+          ))}
 
-          <div
+          {/* <div
             className="w-1/2 h-20 cursor-pointer"
             onClick={async () =>(await handleSelection(testItem?.option_2))}
           >
@@ -77,7 +81,7 @@ export default function TestItem({ testItem, index, length }) {
             >
               <div className="break-words p-2">{testItem?.option_4}</div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -22,17 +22,19 @@ export default function TestResultItem({ testItem, index, length }) {
         <div className="py-3 break-words">{testItem?.question}</div>
         <div className="answer flex flex-row justify-between flex-wrap py-24">
           {[testItem?.option_1, testItem?.option_2, testItem?.option_3, testItem?.option_4].map((option, idx) => (
-            <div
-              key={idx}
-              className="w-1/2 h-20 cursor-pointer"
-            >
+            option !== "" && (
               <div
-                style={{ maxWidth: "95%", maxHeight: "90%" }}
-                className={`flex flex-col justify-center w-full h-full border-2 rounded-lg ${getOptionStyle(option)}`}
+                key={idx}
+                className="w-1/2 h-20 cursor-pointer"
               >
-                <div className="break-words p-2">{option}</div>
+                <div
+                  style={{ maxWidth: "95%", maxHeight: "90%" }}
+                  className={`flex flex-col justify-center w-full h-full border-2 rounded-lg ${getOptionStyle(option)}`}
+                >
+                  <div className="break-words p-2">{option}</div>
+                </div>
               </div>
-            </div>
+            )
           ))}
         </div>
       </div>

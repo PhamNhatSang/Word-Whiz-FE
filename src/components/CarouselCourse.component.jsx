@@ -8,6 +8,7 @@ import CardItem from './Card.component';
 import { Link } from 'react-router-dom';
 import ReviewItem from './ReviewItem.component';
 import axiosInstance from '../api/axios';
+import '../App.css';
 export default function CarouselItem({courses,courseType}) {
    const [visible, setVisible] = useState(false);
     const responsiveOptions = [
@@ -45,7 +46,7 @@ export default function CarouselItem({courses,courseType}) {
     return (
         <div className="py-5 card">
             <div className=" px-11  font-semibold text-xl">{courseType}</div>
-            <Carousel value={courses}  numScroll={1} numVisible={3} circular responsiveOptions={responsiveOptions} itemTemplate={courseTemplate} />
+            <Carousel className={courses?.length<3?'hidden-link':''} value={courses}  numScroll={1} numVisible={3} circular responsiveOptions={responsiveOptions} itemTemplate={courseTemplate} />
         </div>
     )
 }

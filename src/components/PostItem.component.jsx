@@ -27,12 +27,14 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default function PostItemComponent({setListPost, post, user }) {
+export default function PostItemComponent({setListPost, post, user,setIsLoading,setHasMore ,setPage}) {
   const [openComment, setOpenComment] = useState(false);
   const [visibleDialog, setVisibleDialog] = useState(false);
   const [content, setContent] = useState("");
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [listComment, setListComment] = useState([]);
+  const [numberOfComments, setNumberOfComments] = useState(post.numberOfComments);
+  const [numberOfLikes, setNumberOfLikes] = useState(post.numberOfLikes);
   const handleOpenComment = async () => {
     if (!openComment) {
       const result = await axiosInstance.get(
@@ -47,6 +49,7 @@ export default function PostItemComponent({setListPost, post, user }) {
   const handleAddComment = async () => {
     try {
       if (content === "") return;
+     
       const result = await axiosInstance.post(`/api/community/post/comment`, {
         postId: post?.postId,
         content: content,
@@ -54,7 +57,10 @@ export default function PostItemComponent({setListPost, post, user }) {
       setListComment([...listComment, result.data]);
       setOpenComment(true);
       setContent("");
+      setNumberOfComments(numberOfComments + 1);
     } catch (e) {
+     
+      message.error('Add comment failed')
       console.log(e);
     }
   };
@@ -62,22 +68,43 @@ export default function PostItemComponent({setListPost, post, user }) {
   const handleLikePost = async () => {
     try {
       setIsLiked(!isLiked);
+
+      if (isLiked) {
+        setNumberOfLikes(numberOfLikes - 1);
+      } else {
+        setNumberOfLikes(numberOfLikes + 1);
+      }
       await axiosInstance.post(`/api/community/post/like/${post?.postId}`, {
         isLiked: !isLiked,
       });
+     
     } catch (e) {
-      setIsLiked(isLiked);
+      setIsLiked(!isLiked);
+      if (isLiked) {
+        setNumberOfLikes(numberOfLikes - 1);
+      } else {
+        setNumberOfLikes(numberOfLikes + 1);
+      }
+      message.error('Like post failed')
       console.log(e);
     }
   };
   const handleDeletePost = async () => {
     try {
-      await axiosInstance.delete(`/api/community/post/${post?.postId}`);
-      setListPost((prev) => prev.filter((item) => item.postId !== post?.postId));
+      setIsLoading(true);
+      const result = await axiosInstance.delete(`/api/community/post/${post?.postId}`);
+      setListPost(result.data);
+      setPage(1)
       message.success('Delete post success');
+
     } catch (e) {
       message.error('Delete post failed')
+      
       console.log(e);
+    }finally{
+      setIsLoading(false);
+      setHasMore(true);
+
     }
 
   }
@@ -126,7 +153,7 @@ export default function PostItemComponent({setListPost, post, user }) {
             ))}
           </div>
 
-          <div className={`react  mt-2 ${openComment ? "border-b-2" : ""}`}>
+          <div className={`react  mt-2 flex flex-row items-center ${openComment ? "border-b-2" : ""}`}>
             <IconButton
               component="label"
               variant="contained"
@@ -137,6 +164,7 @@ export default function PostItemComponent({setListPost, post, user }) {
             >
               <FavoriteIcon></FavoriteIcon>
             </IconButton>
+            <div className="px-2">{numberOfLikes}</div>
             <IconButton
               onClick={async () => {
                 await handleOpenComment();
@@ -146,6 +174,7 @@ export default function PostItemComponent({setListPost, post, user }) {
             >
               <ChatBubbleOutlineIcon></ChatBubbleOutlineIcon>
             </IconButton>
+            <div className="px-2">{numberOfComments}</div>
           </div>
           {openComment && (
             <div
