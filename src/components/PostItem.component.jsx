@@ -54,10 +54,10 @@ export default function PostItemComponent({setListPost, post, user,setIsLoading,
         postId: post?.postId,
         content: content,
       });
-      setListComment([...listComment, result.data]);
+      setListComment([...listComment, result.data.comment]);
       setOpenComment(true);
       setContent("");
-      setNumberOfComments(numberOfComments + 1);
+      setNumberOfComments(result.data.numberOfComments);
     } catch (e) {
      
       message.error('Add comment failed')
@@ -67,24 +67,13 @@ export default function PostItemComponent({setListPost, post, user,setIsLoading,
 
   const handleLikePost = async () => {
     try {
-      setIsLiked(!isLiked);
-
-      if (isLiked) {
-        setNumberOfLikes(numberOfLikes - 1);
-      } else {
-        setNumberOfLikes(numberOfLikes + 1);
-      }
-      await axiosInstance.post(`/api/community/post/like/${post?.postId}`, {
+     
+     const result= await axiosInstance.post(`/api/community/post/like/${post?.postId}`, {
         isLiked: !isLiked,
       });
-     
-    } catch (e) {
       setIsLiked(!isLiked);
-      if (isLiked) {
-        setNumberOfLikes(numberOfLikes - 1);
-      } else {
-        setNumberOfLikes(numberOfLikes + 1);
-      }
+      setNumberOfLikes(result.data.numberOfLikes);
+    } catch (e) {
       message.error('Like post failed')
       console.log(e);
     }
