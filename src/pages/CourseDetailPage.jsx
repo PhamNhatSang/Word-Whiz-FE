@@ -10,16 +10,18 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Rate } from 'antd';
 import { useNavigate } from "react-router-dom";
+
 export default function CourseDetailPage() {
   const { courseId } = useParams();
   const [selectedProduct, setSelectedProduct] = useState([]);
-  const [course, setCourse] = useState({});
+  const [course, setCourse] = useState(null);
   const [words, setWords] = useState([]);
   const [selectedWord, setSelectedWord] = useState(null);
   const [rate, setRate] = useState(0);
   const [page, setPage] = useState(0);
-  const { user,logout } = useAuth();
-  const nagative = useNavigate();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
   const responsiveOptions = [
     {
       breakpoint: "1400px",
@@ -45,31 +47,27 @@ export default function CourseDetailPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try{
+      try {
         const res = await axiosInstance.get(`/api/course/${courseId}`);
-    
         setCourse(res.data);
+        console.log(res.data);
         setWords(res.data?.words);
         setRate(res.data?.rate);
         setSelectedWord(res.data?.words[0]);
-      }catch(error){
-        if(error?.response?.status === 401){
-          logout()
-
+      } catch (error) {
+        if (error?.response?.status === 401) {
+          logout();
         }
-        if(error?.response?.status === 404){
-          nagative('/404')
+        if (error?.response?.status === 404) {
+          navigate('/404');
         }
-
         console.error('Fetch course data failed:', error);
       }
-     
     };
     fetchData();
-  }, []);
+  }, [courseId, logout, navigate]);
 
   const handleRate = async (value) => {
-    
     await axiosInstance.post(`/api/course/rate/${courseId}`, {
       rate: value,
     });
@@ -82,7 +80,7 @@ export default function CourseDetailPage() {
         word={selectedWord}
         height={"20rem"}
         wordClass={"max-w-sm break-words text-xl"}
-      ></FlashCard>
+      />
     );
   };
 
@@ -91,46 +89,58 @@ export default function CourseDetailPage() {
     setSelectedWord(words[e.page]);
     console.log(e.page);
   };
+
   return (
     <div>
-      <div className="py-4 px-64  flex flex-row  items-center">
-        <div className=" text-4xl mr-4">{course?.title}</div>{user?.id === course?.owner_id &&(<Link to={`/library/course/edit/${course.id}`}>
-          <IconButton>
-            <ModeEditIcon></ModeEditIcon>
-          </IconButton>
-        </Link>)}
+      <div className="py-4 px-64 flex flex-row items-center">
+        <div className="text-4xl mr-4">{course?.title}</div>
+        {user?.id === course?.owner_id && (
+          <Link to={`/library/course/edit/${course?.id}`}>
+            <IconButton>
+              <ModeEditIcon />
+            </IconButton>
+          </Link>
+        )}
       </div>
-      <div className="px-64" ><Rate allowHalf value={rate}  onChange={async (value)=>(await handleRate(value))}/></div>
-
-
-      <div className=" py-10 flex flex-row ">
-        {words.length > 0?( <div className="w-1/2 h-fit flex flex-col items-center justify-center">
-          <div className="w-1/2  content-center">
-            <div className=" card">
-              {words.length > 0? ( <Carousel
-                value={words}
-                numVisible={1}
-                numScroll={1}
-                responsiveOptions={responsiveOptions}
-                page={page}
-                itemTemplate={FlashCardD}
-                onPageChange={handleTransitionEnd}
-              />):(<div>There is no word in this course</div>)}
-              
+      <div className="px-64">
+        <Rate allowHalf value={rate} onChange={async (value) => (await handleRate(value))} />
+      </div>
+      <div className="py-10 flex flex-row">
+        {words.length > 0 ? (
+          <div className="w-1/2 h-fit flex flex-col items-center justify-center">
+            <div className="w-1/2 content-center">
+              <div className="card">
+                {words.length > 0 ? (
+                  <Carousel
+                    value={words}
+                    numVisible={1}
+                    numScroll={1}
+                    responsiveOptions={responsiveOptions}
+                    page={page}
+                    itemTemplate={FlashCardD}
+                    onPageChange={handleTransitionEnd}
+                  />
+                ) : (
+                  <div>There is no word in this course</div>
+                )}
+              </div>
             </div>
+            <div>{page + 1 + "/" + words.length}</div>
           </div>
-          <div>{page + 1 + "/" + words.length}</div>
-        </div>):( <div className="w-1/2 h-fit flex flex-col px-64">There is no word in this course</div>)}
-       
+        ) : (
+          <div className="w-1/2 h-fit flex flex-col px-64">There is no word in this course</div>
+        )}
         <div className="w-full" style={{ maxWidth: "50%" }}>
+       {  course && (
           <WordList
             selectedWord={selectedWord}
             setSelectedWord={setSelectedWord}
             setPage={setPage}
             words={words}
             courseId={courseId}
-            inLibrary={course.isInLibrary}
-          ></WordList>
+            inLibrary={course?.isInLibrary}
+          />
+        )}
         </div>
       </div>
     </div>
