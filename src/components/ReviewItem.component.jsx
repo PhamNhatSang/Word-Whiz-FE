@@ -29,8 +29,8 @@ export default function ReviewItem({visible,setVisible,words,courseId}) {
             <Dialog header={header} visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
             <div className="card">
             <DataTable value={words} tableStyle={{ minWidth: '50rem' }}>
-                <Column field="term"></Column>
-                <Column field="definition" ></Column>
+                <Column field="term" header="Term"></Column>
+                <Column field="definition" header="Definition"></Column>
             </DataTable>
         </div>
             </Dialog>

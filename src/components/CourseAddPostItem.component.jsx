@@ -31,6 +31,7 @@ export default function CourseAddPostItem({
       const response = await axiosInstance.get(
         `/api/course/${course?.courseId}`
       );
+      console.log(response.data?.words);
       setWords(response.data?.words);
       setVisible(true);
     } catch (e) {
