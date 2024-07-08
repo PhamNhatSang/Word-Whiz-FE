@@ -31,7 +31,8 @@ import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 import MilitaryTechOutlinedIcon from '@mui/icons-material/MilitaryTechOutlined';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import { Home } from "@mui/icons-material";
-
+import { emptyCheck } from "../utils/validate";
+import { message } from "antd";
 export default function Header() {
   const [activeLink, setActiveLink] = useState("");
   const settings = ["Logout"];
@@ -121,6 +122,10 @@ export default function Header() {
       language: selectedLanguage,
     };
     try {
+      if (emptyCheck(title)) {
+        message.error("Title is required");
+        return;
+      }
       await axiosInstance.post("/api/library/course", data);
       navigate("/library");
       window.location.reload();
@@ -139,6 +144,10 @@ export default function Header() {
       groupDescription,
     };
     try {
+      if (emptyCheck(groupName)) {
+        message.error("Group Name is required");
+        return;
+      }
       await axiosInstance.post("/api/group", data);
       navigate("/group");
       window.location.reload();

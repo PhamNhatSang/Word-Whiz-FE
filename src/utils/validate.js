@@ -18,6 +18,11 @@ export  function passwordValidate(value){
 
 }
 
+export function emptyCheck(value){
+    if(value.trim() === '')
+        return true
+}
+
 export function roleCheck(role){
     if(role.trim() === '')
         return "Role is required";
