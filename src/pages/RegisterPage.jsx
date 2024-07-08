@@ -18,6 +18,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import {message} from 'antd';
+import { emailValidate,passwordValidate ,roleCheck} from '../utils/validate';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -48,6 +49,21 @@ export default function RegisterPage() {
     const email = data.get('email');
     const password = data.get('password');
     const username = data.get('username');
+    if(!emailValidate(email)){
+      message.error('Email is invalid');
+      return;
+    }
+    const passwordValidateMessage = passwordValidate(password);
+    if(passwordValidateMessage !== 'Password is valid'){
+      message.error(passwordValidateMessage);
+      return;
+    }
+
+    const roleCheckMessage = roleCheck(role);
+    if(roleCheckMessage == 'Role is required'){
+      message.error(roleCheckMessage);
+      return;
+    }
     axios.post('https://word-whiz-production.up.railway.app/api/auth/register', {
       email: email,
       password: password,

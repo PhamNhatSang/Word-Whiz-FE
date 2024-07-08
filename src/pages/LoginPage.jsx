@@ -44,6 +44,7 @@ export default function LoginPage() {
     const email = data.get("email");
     const password = data.get("password");
     try{
+     
       await login({email, password});
       message.success('Login success');
 
