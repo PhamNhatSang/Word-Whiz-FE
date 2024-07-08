@@ -46,7 +46,7 @@ export default function HomePage() {
             <CarouselItem courses={newCourse} courseType={"New Courses"} />
             <CarouselItem
               courses={continueCourse}
-              courseType={"Continue courses learning"}
+              courseType={"Continue courses fashcard learning"}
             />
 
           </div>
