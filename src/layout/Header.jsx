@@ -114,7 +114,6 @@ export default function Header() {
   };
 
   const handleAddCourse = async () => {
-    setVisible(false);
 
     const data = {
       title,
@@ -128,16 +127,17 @@ export default function Header() {
       }
       await axiosInstance.post("/api/library/course", data);
       navigate("/library");
+      setVisible(false);
       window.location.reload();
       showSuccess("Add course success");
     } catch (error) {
       if (error.response.status === 401) logout();
       showError("Some thing went wrong");
     }
+
   };
 
   const handleAddGroup = async () => {
-    setGroupAddVisible(false);
 
     const data = {
       groupName,
@@ -150,12 +150,15 @@ export default function Header() {
       }
       await axiosInstance.post("/api/group", data);
       navigate("/group");
+      setGroupAddVisible(false);
+
       window.location.reload();
       showSuccess("Add Group success");
     } catch (error) {
       if (error.response.status === 401) logout();
       showError("Some thing went wrong");
     }
+
   };
 
   return (
