@@ -38,6 +38,7 @@ export default function HomePage() {
         </div>
       ) : (
         <div className="w-full mx-auto max-w-screen-2xl	 p-1 md:flex md:items-center md:justify-between">
+         
           <div className="w-full  md:items-center ">
             <div className="w-1/5"></div>
             <AddCourseDialog></AddCourseDialog>
@@ -48,6 +49,7 @@ export default function HomePage() {
               courses={continueCourse}
               courseType={"Continue courses fashcard learning"}
             />
+            
 
           </div>
         </div>
